@@ -53,16 +53,16 @@ def get_search_direction(theta, type='gradient'):
         delta_theta = -1 * grad(theta)
     return delta_theta, lamba_square
 
-def get_step(f, theta, grad_theta, delta_theta, type='backtracing'):
+def get_step(theta, grad_theta, delta_theta, type='backtracing'):
     if type == 'backtracing':
         t = 1
-        alpha = 0.8
-        beta = 0.99
+        alpha = 0.5
+        beta = 0.2
         while J(theta + t*delta_theta) > \
                 J(theta) + alpha * t * grad_theta.dot(delta_theta):
             t = beta * t
     else:
-        t = 0.000002
+        t = 0.01
     return t
 
 def stop_criteria(delta_theta, lambda_square, method, epsilon):
@@ -87,9 +87,12 @@ while 1:
     if stop_criteria(delta_theta, lambda_square, method, epsilon):
         theta_star = theta
         break
-    t = get_step(f, theta, grad_theta, delta_theta, type='backtracin')
+    t = get_step(theta, grad_theta, delta_theta, type='backtracin')
     theta = theta + t * delta_theta
     cost = J(theta,lamb=0)
     print(cost)
 
-plt.show()
+print(theta_analy)
+print(theta_star)
+print(J(theta_analy))
+print(J(theta_star))

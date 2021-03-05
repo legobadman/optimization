@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>230c1f03-dcb4-4d25-883b-ef96139bc462</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>2d.py</StartupFile>
+    <StartupFile>acc_calibration.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -27,10 +27,16 @@
     <Compile Include="2d.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="acc_calibration.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Arrow3D.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="bowl.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="linearregression.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="optimization.py" />

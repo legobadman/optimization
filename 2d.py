@@ -4,16 +4,32 @@ from Arrow3D import Arrow3D
 
 #User specific:
 def f_(x,y):
-    return 1./3 * x**2 + 1./2 * y**2
+    #return 1./3 * x**2 + 1./2 * y**2
+    #return x**2 / (x**2 + y**2)
+    return x**2 + x*y + y**2
 
 def f(x):
-    return 1./3 * x[0]**2 + 1./2 * x[1]**2
+    #return 1./3 * x[0]**2 + 1./2 * x[1]**2
+    #return x[0]**2 / (x[0]**2 + x[1]**2)
+    return x[0]**2 + x[0]*y[0] + y[0]**2
 
-def grad(x):
-    return np.array([2./3 * x[0], x[1]])
+def grad(X):
+    x, y = X[0], X[1]
+    return np.array([2./3 * x, y])
+    Jx = np.zeros(2)
+    Jx[0] = 2*x*y**2 / (x**2+y**2)**2
+    Jx[1] = -2*y*x**2 / (x**2+y**2)**2
+    return Jx
 
-def hessian(x):
+def hessian(X):
     return np.array([[2./3, 0], [0, 1]])
+    x, y = X[0], X[1]
+    H = np.zeros((2,2))
+    H[0,0] = float(2*y**4 - 6*(x**2)*(y**2)) / (x**2 + y**2)**3
+    H[0,1] = float(4*x*y*(x**2 - y**2)) / (x**2 + y**2)**3
+    H[1,0] = H[0,1]
+    H[1,1] = float(6*(x**2)*(y**2) - 2*x**4) / (x**2 + y**2)**3
+    return H
 #End
 
 
@@ -45,12 +61,12 @@ def get_step(f, x, grad_x, delta_x, type='backtracing'):
         while f(x + t*delta_x) > f(x) + alpha * t * grad_x.dot(delta_x):
             t = beta * t
     else:
-        t = 0.1
+        t = 0.5
     return t
 
 
 
-show_3d = False
+show_3d = True
 
 if show_3d:
     x, y = np.mgrid[-2:2:20j,-2:2:20j]
@@ -69,8 +85,8 @@ def annote_descent(x, t, delta_x, f):
     x_new = x_old + t * delta_x
     if show_3d:
         a = Arrow3D([x_old[0], x_new[0]], [x_old[1], x_new[1]], 
-                [f(x_old), f(x_new)], mutation_scale=5, 
-                lw=3, arrowstyle="-|>", color="black")
+                [f(x_old), f(x_new)], mutation_scale=3, 
+                lw=2, arrowstyle="-|>", color="black")
         ax.add_artist(a)
     else:
         plt.scatter(x_new[0], x_new[1], marker='x')
@@ -79,11 +95,11 @@ def annote_descent(x, t, delta_x, f):
                                      connectionstyle='arc3'))
 
 epsilon = 0.05
-x_start = np.array([-2,-2]) #这个x是二元坐标(x,y)
+x_start = np.array([-2, 0]) #这个x是二元坐标(x,y)
 x = x_start
 method = 'newton'
 
-while True:
+while 0:
     grad_x = grad(x)
     delta_x, lambda_square = get_search_direction(x, f, grad, method)
     if stop_criteria(delta_x, lambda_square, method, epsilon):
